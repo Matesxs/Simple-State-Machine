@@ -6,7 +6,7 @@ namespace StateMachine
 
 	State::State(std::string name, bool final /*= false*/, CallbackFunction onEnter /*= nullptr*/, CallbackFunction onStay /*= nullptr*/, CallbackFunction onExit /*= nullptr*/)
 	{
-		Setup(name, final, onEnter, m_onStay, onExit);
+		Setup(name, final, onEnter, onStay, onExit);
 	}
 
 	void State::Setup(std::string name, bool final, CallbackFunction onEnter, CallbackFunction onStay, CallbackFunction onExit)
