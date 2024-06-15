@@ -23,15 +23,12 @@ namespace StateMachine
 		void Init();
 
 		void Add(EventTransition eventTransitions[], size_t size);
-		void Add(GlobalEventTransition globalEventTransitions[], size_t size);
 		void Add(ConditionalTransition conditionalTransitions[], size_t size);
 		void Add(TimedTransition* timedTransition);
 		void Add(EventTransition* eventTransition);
-		void Add(GlobalEventTransition* globalEventTransition);
 		void Add(ConditionalTransition* conditionalTransition);
 		void Add(TimedTransition timedTransitions[], size_t size);
 		void Add(EventTransition* eventTransitions[], size_t size);
-		void Add(GlobalEventTransition* globalEventTransitions[], size_t size);
 		void Add(ConditionalTransition* conditionalTransitions[], size_t size);
 		void Add(TimedTransition* timedTransitions[], size_t size);
 
@@ -67,7 +64,6 @@ namespace StateMachine
 		const State* m_initialState = nullptr;
 
 		LinkedList<EventTransition*> m_eventTransitions;
-		LinkedList<GlobalEventTransition*> m_globalEventTransitions;
 		LinkedList<ConditionalTransition*> m_conditionalTransitions;
 		LinkedList<TimedTransition*> m_timedTransitions;
 

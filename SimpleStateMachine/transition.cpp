@@ -50,16 +50,4 @@ namespace StateMachine
 	{
 		m_start = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 	}
-
-	GlobalEventTransition::GlobalEventTransition(size_t event_id, const State* to)
-	{
-		Setup(event_id, to);
-	}
-
-	void GlobalEventTransition::Setup(size_t event_id, const State* to)
-	{
-		m_id = _m_nextId++;
-		m_eventID = event_id;
-		m_to = to;
-	}
 }

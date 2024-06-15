@@ -15,12 +15,6 @@ namespace StateMachine
 			Add(&eventTransitions[i]);
 	}
 
-	void Machine::Add(GlobalEventTransition globalEventTransitions[], size_t size)
-	{
-		for (size_t i = 0; i < size; i++)
-			Add(&globalEventTransitions[i]);
-	}
-
 	void Machine::Add(ConditionalTransition conditionalTransitions[], size_t size)
 	{
 		for (size_t i = 0; i < size; i++)
@@ -39,12 +33,6 @@ namespace StateMachine
 			Add(eventTransitions[i]);
 	}
 
-	void Machine::Add(GlobalEventTransition* globalEventTransitions[], size_t size)
-	{
-		for (size_t i = 0; i < size; i++)
-			Add(globalEventTransitions[i]);
-	}
-
 	void Machine::Add(ConditionalTransition* conditionalTransitions[], size_t size)
 	{
 		for (size_t i = 0; i < size; i++)
@@ -59,25 +47,17 @@ namespace StateMachine
 
 	void Machine::Add(EventTransition* eventTransition)
 	{
-		if (eventTransition->m_from != nullptr &&
-			eventTransition->m_to != nullptr &&
-			!eventTransition->m_from->m_final)
+		if (eventTransition->m_to != nullptr &&
+			(eventTransition->m_from == nullptr || !eventTransition->m_from->m_final))
 		{
 			m_eventTransitions.Add(eventTransition);
 		}
 	}
 
-	void Machine::Add(GlobalEventTransition* globalEventTransition)
-	{
-		if (globalEventTransition->m_to != nullptr)
-			m_globalEventTransitions.Add(globalEventTransition);
-	}
-
 	void Machine::Add(ConditionalTransition* conditionalTransition)
 	{
-		if (conditionalTransition->m_from != nullptr &&
-			(conditionalTransition->m_to != nullptr || conditionalTransition->m_toNeg != nullptr) &&
-			!conditionalTransition->m_from->m_final &&
+		if ((conditionalTransition->m_to != nullptr || conditionalTransition->m_toNeg != nullptr) &&
+			(conditionalTransition->m_from == nullptr || !conditionalTransition->m_from->m_final) &&
 			conditionalTransition->m_conditionCheck != nullptr)
 		{
 			m_conditionalTransitions.Add(conditionalTransition);
@@ -98,20 +78,10 @@ namespace StateMachine
 	{
 		if (IsFinished()) return;
 
-		for (auto& transition : m_globalEventTransitions)
-		{
-			if (transition->m_triggered &&
-				transition->m_to != m_currentState)
-			{
-				Transition(transition->m_to);
-				return;
-			}
-		}
-
 		for (auto& transition : m_eventTransitions)
 		{
 			if (transition->m_triggered &&
-				transition->m_from != m_currentState &&
+				(transition->m_from == m_currentState || transition->m_from == nullptr) &&
 				transition->m_to != m_currentState)
 			{
 				Transition(transition->m_to);
@@ -121,7 +91,7 @@ namespace StateMachine
 
 		for (auto& transition : m_conditionalTransitions)
 		{
-			if (transition->m_from != m_currentState) continue;
+			if (transition->m_from != m_currentState && transition->m_from != nullptr) continue;
 
 			if (transition->m_conditionCheck())
 			{
@@ -184,18 +154,10 @@ namespace StateMachine
 
 	void Machine::EventTrigger(size_t eventID)
 	{
-		for (auto& eventTransition : m_globalEventTransitions)
-		{
-			if (eventTransition->m_eventID == eventID)
-			{
-				eventTransition->m_triggered = true;
-				break;
-			}
-		}
-
 		for (auto& eventTransition : m_eventTransitions)
 		{
-			if (eventTransition->m_eventID == eventID && eventTransition->m_from == m_currentState)
+			if (eventTransition->m_eventID == eventID &&
+				(eventTransition->m_from == m_currentState || eventTransition->m_from == nullptr))
 			{
 				eventTransition->m_triggered = true;
 				break;
@@ -225,10 +187,6 @@ namespace StateMachine
 	{
 		// Clear triggered events
 		for (auto& transition : m_eventTransitions)
-			transition->m_triggered = false;
-
-		// Clear triggered events
-		for (auto& transition : m_globalEventTransitions)
 			transition->m_triggered = false;
 
 		if (m_onTransition != nullptr)

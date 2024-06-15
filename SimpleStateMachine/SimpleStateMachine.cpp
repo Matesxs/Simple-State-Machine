@@ -47,11 +47,8 @@ StateMachine::EventTransition eventTransitions[] = {
 	{ 1, &states[2], &states[5] },
 	{ 1, &states[3], &states[5] },
 	{ 1, &states[4], &states[5] },
-};
-
-StateMachine::GlobalEventTransition globalEventTransitions[] = {
-	{ 2, &states[2] },
-	{ 3, &states[6] },
+	{ 2, nullptr, &states[2] },
+	{ 3, nullptr, &states[6] },
 };
 
 int main()
@@ -79,7 +76,6 @@ int main()
 	stateMachine.Add(timedTransitions, sizeof(timedTransitions) / sizeof(StateMachine::TimedTransition));
 	stateMachine.Add(condititionalTransitions, sizeof(condititionalTransitions) / sizeof(StateMachine::ConditionalTransition));
 	stateMachine.Add(eventTransitions, sizeof(eventTransitions) / sizeof(StateMachine::EventTransition));
-	stateMachine.Add(globalEventTransitions, sizeof(globalEventTransitions) / sizeof(StateMachine::GlobalEventTransition));
 
 	stateMachine.Init();
 

@@ -46,23 +46,6 @@ namespace StateMachine
 		bool m_triggered = false;
 	};
 
-	class GlobalEventTransition : public AbstractTransition
-	{
-		friend class Machine;
-
-	public:
-		GlobalEventTransition() = default;
-		GlobalEventTransition(size_t event_id,
-			const State* to);
-
-		void Setup(size_t event_id,
-			const State* to);
-
-	private:
-		size_t m_eventID = 0;
-		bool m_triggered = false;
-	};
-
 	class ConditionalTransition : public AbstractTransition
 	{
 		friend class Machine;
