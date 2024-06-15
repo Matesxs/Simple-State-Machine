@@ -78,10 +78,43 @@ namespace StateMachine
 	{
 		if (IsFinished()) return;
 
+		// Handle global event transitions
 		for (auto& transition : m_eventTransitions)
 		{
 			if (transition->m_triggered &&
-				(transition->m_from == m_currentState || transition->m_from == nullptr) &&
+				transition->m_from == nullptr &&
+				transition->m_to != m_currentState)
+			{
+				Transition(transition->m_to);
+				return;
+			}
+		}
+
+		// Handle global conditional transitions
+		for (auto& transition : m_conditionalTransitions)
+		{
+			if (transition->m_from != nullptr) continue;
+
+			if (transition->m_conditionCheck())
+			{
+				if (transition->m_to == nullptr) continue;
+
+				Transition(transition->m_to);
+				return;
+			}
+			else
+			{
+				if (transition->m_toNeg == nullptr) continue;
+
+				Transition(transition->m_toNeg);
+				return;
+			}
+		}
+
+		for (auto& transition : m_eventTransitions)
+		{
+			if (transition->m_triggered &&
+				transition->m_from == m_currentState &&
 				transition->m_to != m_currentState)
 			{
 				Transition(transition->m_to);
@@ -91,7 +124,7 @@ namespace StateMachine
 
 		for (auto& transition : m_conditionalTransitions)
 		{
-			if (transition->m_from != m_currentState && transition->m_from != nullptr) continue;
+			if (transition->m_from != m_currentState) continue;
 
 			if (transition->m_conditionCheck())
 			{
