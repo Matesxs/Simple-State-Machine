@@ -53,7 +53,7 @@ StateMachine::EventTransition eventTransitions[] = {
 
 int main()
 {
-	StateMachine::Machine stateMachine;
+	/*StateMachine::Machine stateMachine;
 
     stateMachine.SetTransitionCallback([](const StateMachine::State* from, const StateMachine::State* to)
         {
@@ -121,7 +121,27 @@ int main()
 		}
 
 		stateMachine.Reset();
-	}
+	}*/
+
+	StateMachine::State state1("test2");
+	StateMachine::State state2("test2");
+
+	StateMachine::State* state1Ptr = &state1;
+	StateMachine::State* state2Ptr = &state2;
+
+	printf("Objects compare:\r\n");
+	printf("Same object: %d\r\n", state1 == state1);
+	printf("Different object: %d\r\n", state1 == state2);
+
+	printf("\r\nCompare pointers:\r\n");
+	printf("Same pointer: %d\r\n", state1Ptr == state1Ptr);
+	printf("Different pointer: %d\r\n", state1Ptr == state2Ptr);
+
+	printf("\r\nMixed compare:\r\n");
+	printf("Object and pointer of same object: %d\r\n", state1 == state1Ptr);
+	printf("Pointer and object of the same object: %d\r\n", state1Ptr == state1);
+	printf("Object and pointer of different object: %d\r\n", state1 == state2Ptr);
+	printf("Pointer and object of the different object: %d\r\n", state1Ptr == state2);
 
 	return 0;
 }

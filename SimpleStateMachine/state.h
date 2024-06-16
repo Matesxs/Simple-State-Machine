@@ -28,6 +28,9 @@ namespace StateMachine
 		size_t getID() const { return m_id; }
 		std::string getName() const { return m_name; }
 
+	public:
+		bool operator==(const State& other) const { return m_id == other.m_id; }
+
 	private:
 		size_t m_id = 0;
 		static size_t _m_nextId;
@@ -38,4 +41,7 @@ namespace StateMachine
 		CallbackFunction m_onStay = nullptr;
 		CallbackFunction m_onExit = nullptr;
 	};
+
+	bool operator==(const State* a, const State& b);
+	bool operator==(const State& a, const State* b);
 }

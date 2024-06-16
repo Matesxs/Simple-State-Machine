@@ -18,4 +18,14 @@ namespace StateMachine
 		m_onStay = onStay;
 		m_onExit = onExit;
 	}
+
+	bool operator==(const State* a, const State& b)
+	{
+		return a->getID() == b.getID();
+	}
+
+	bool operator==(const State& a, const State* b)
+	{
+		return a.getID() == b->getID();
+	}
 }
